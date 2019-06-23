@@ -5,12 +5,24 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 )
 
 var maze []string
 
+func init() {
+	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
+	cbTerm.Stdin = os.Stdin
+
+	err := cbTerm.Run()
+	if err != nil {
+		log.Fatalf("Unable to activate cbreak mode in terminal: %v\n", err)
+	}
+}
+
 func main() {
 	// initialize the game
+	defer cleanup()
 
 	// load resources
 	err := loadMaze()
@@ -60,5 +72,15 @@ func loadMaze() error {
 func printScreen() {
 	for _, line := range maze {
 		fmt.Println(line)
+	}
+}
+
+func cleanup() {
+	cookedTerm := exec.Command("/bin/stty", "-cbreak", "echo")
+	cookedTerm.Stdin = os.Stdin
+
+	err := cookedTerm.Run()
+	if err != nil {
+		log.Fatalf("Unable to activate cooked mode in terminal: %v\n", err)
 	}
 }
