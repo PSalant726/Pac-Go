@@ -45,6 +45,7 @@ func main() {
 		}
 
 		// process movement
+		player.Move(input)
 
 		// process collisions
 

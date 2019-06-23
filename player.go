@@ -5,8 +5,8 @@ type Player struct {
 	Col int
 }
 
-func Move(player Player, dir string) {
-	player.Row, player.Col = makeMove(player.Row, player.Col, dir)
+func (p *Player) Move(dir string) {
+	p.Row, p.Col = makeMove(p.Row, p.Col, dir)
 }
 
 func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
