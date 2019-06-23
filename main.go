@@ -90,8 +90,20 @@ func printScreen() {
 	clearScreen()
 
 	for _, line := range maze {
-		fmt.Println(line)
+		for _, char := range line {
+			switch char {
+			case '#':
+				fmt.Printf("%c", char)
+			default:
+				fmt.Printf(" ")
+			}
+		}
+
+		fmt.Print("\n")
 	}
+
+	moveCursor(player.Row, player.Col)
+	fmt.Printf("P")
 }
 
 func readInput() (string, error) {
@@ -102,8 +114,22 @@ func readInput() (string, error) {
 		return "", err
 	}
 
-	if cnt == 1 && buffer[0] == 0x1b {
-		return "ESC", nil
+	if buffer[0] == 0x1b {
+		if cnt == 1 {
+			return "ESC", nil
+
+		} else if cnt >= 3 && buffer[1] == '[' {
+			switch buffer[2] {
+			case 'A':
+				return "UP", nil
+			case 'B':
+				return "DOWN", nil
+			case 'C':
+				return "RIGHT", nil
+			case 'D':
+				return "LEFT", nil
+			}
+		}
 	}
 
 	return "", nil
