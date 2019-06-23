@@ -9,6 +9,7 @@ import (
 )
 
 var maze []string
+var player Player
 
 func init() {
 	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
@@ -71,6 +72,15 @@ func loadMaze() error {
 	for scanner.Scan() {
 		line := scanner.Text()
 		maze = append(maze, line)
+	}
+
+	for row, line := range maze {
+		for col, char := range line {
+			switch char {
+			case 'P':
+				player = Player{row, col}
+			}
+		}
 	}
 
 	return nil
