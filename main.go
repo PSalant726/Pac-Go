@@ -37,6 +37,11 @@ func main() {
 		printScreen()
 
 		// process input
+		input, err := readInput()
+		if err != nil {
+			log.Printf("Error reading input: %v\n", err)
+			break
+		}
 
 		// process movement
 
@@ -45,7 +50,9 @@ func main() {
 		// check game over
 
 		// break infinite loop
-		break
+		if input == "ESC" {
+			break
+		}
 
 		// repeat
 	}
@@ -70,9 +77,35 @@ func loadMaze() error {
 }
 
 func printScreen() {
+	clearScreen()
+
 	for _, line := range maze {
 		fmt.Println(line)
 	}
+}
+
+func readInput() (string, error) {
+	buffer := make([]byte, 100)
+
+	cnt, err := os.Stdin.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+
+	if cnt == 1 && buffer[0] == 0x1b {
+		return "ESC", nil
+	}
+
+	return "", nil
+}
+
+func clearScreen() {
+	fmt.Printf("\x1b[2J")
+	moveCursor(0, 0)
+}
+
+func moveCursor(row, col int) {
+	fmt.Printf("\x1b[%d;%df", row+1, col+1)
 }
 
 func cleanup() {
