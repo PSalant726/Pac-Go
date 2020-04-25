@@ -14,22 +14,26 @@ func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
 
 	switch dir {
 	case "UP":
-		newRow = newRow - 1
+		newRow--
+
 		if newRow < 0 {
 			newRow = len(maze) - 1
 		}
 	case "DOWN":
-		newRow = newRow + 1
+		newRow++
+
 		if newRow == len(maze)-1 {
 			newRow = 0
 		}
 	case "RIGHT":
-		newCol = newCol + 1
+		newCol++
+
 		if newCol == len(maze[0]) {
 			newCol = 0
 		}
 	case "LEFT":
-		newCol = newCol - 1
+		newCol--
+
 		if newCol < 0 {
 			newCol = len(maze[0]) - 1
 		}
@@ -40,5 +44,5 @@ func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
 		newCol = oldCol
 	}
 
-	return
+	return newRow, newCol
 }

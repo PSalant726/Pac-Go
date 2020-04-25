@@ -8,8 +8,10 @@ import (
 	"os/exec"
 )
 
-var maze []string
-var player Player
+var (
+	maze    []string
+	player  *Player
+)
 
 func init() {
 	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
