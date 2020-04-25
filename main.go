@@ -6,11 +6,14 @@ import (
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/danicat/simpleansi"
 )
 
 var (
 	maze    []string
 	player  *Player
+	ghosts  []*Ghost
 )
 
 func init() {
@@ -49,7 +52,16 @@ func main() {
 		// process movement
 		player.Move(input)
 
+		for _, ghost := range ghosts {
+			ghost.Move()
+		}
+
 		// process collisions
+		for _, ghost := range ghosts {
+			if player.Row == ghost.Row && player.Col == ghost.Col {
+				player.Lives--
+			}
+		}
 
 		// check game over
 
@@ -81,7 +93,9 @@ func loadMaze() error {
 		for col, char := range line {
 			switch char {
 			case 'P':
-				player = Player{row, col}
+				player = NewPlayer(row, col, 3)
+			case 'G':
+				ghosts = append(ghosts, NewGhost(row, col))
 			}
 		}
 	}
@@ -107,6 +121,11 @@ func printScreen() {
 
 	moveCursor(player.Row, player.Col)
 	fmt.Printf("P")
+
+	for _, g := range ghosts {
+		simpleansi.MoveCursor(g.Row, g.Col)
+		fmt.Print("G")
+	}
 }
 
 func readInput() (string, error) {
@@ -120,7 +139,6 @@ func readInput() (string, error) {
 	if buffer[0] == 0x1b {
 		if cnt == 1 {
 			return "ESC", nil
-
 		} else if cnt >= 3 && buffer[1] == '[' {
 			switch buffer[2] {
 			case 'A':
