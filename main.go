@@ -14,6 +14,8 @@ var (
 	maze    []string
 	player  *Player
 	ghosts  []*Ghost
+	score   int
+	numDots int
 )
 
 func init() {
@@ -64,9 +66,11 @@ func main() {
 		}
 
 		// check game over
-
-		// break infinite loop
-		if input == "ESC" {
+		if input == "ESC" || player.Lives <= 0 {
+			fmt.Println("\n\t  Game Over")
+			break
+		} else if numDots == 0 {
+			fmt.Println("\nCongratulations! You win!")
 			break
 		}
 
@@ -96,6 +100,8 @@ func loadMaze() error {
 				player = NewPlayer(row, col, 3)
 			case 'G':
 				ghosts = append(ghosts, NewGhost(row, col))
+			case '.':
+				numDots++
 			}
 		}
 	}
@@ -110,6 +116,8 @@ func printScreen() {
 		for _, char := range line {
 			switch char {
 			case '#':
+				fallthrough
+			case '.':
 				fmt.Printf("%c", char)
 			default:
 				fmt.Printf(" ")
@@ -126,6 +134,9 @@ func printScreen() {
 		simpleansi.MoveCursor(g.Row, g.Col)
 		fmt.Print("G")
 	}
+
+	simpleansi.MoveCursor(len(maze)+1, 0)
+	fmt.Println("  Score:", score, "\t  Lives:", player.Lives)
 }
 
 func readInput() (string, error) {

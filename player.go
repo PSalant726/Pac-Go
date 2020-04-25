@@ -12,6 +12,14 @@ func NewPlayer(row, col, lives int) *Player {
 
 func (p *Player) Move(dir string) {
 	p.Row, p.Col = makeMove(p.Row, p.Col, dir)
+
+	switch maze[p.Row][p.Col] {
+	case '.':
+		numDots--
+		score++
+		// Remove dot from the maze
+		maze[p.Row] = maze[p.Row][0:p.Col] + " " + maze[p.Row][p.Col+1:]
+	}
 }
 
 func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
