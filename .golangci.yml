@@ -1,0 +1,17 @@
+# see https://github.com/golangci/golangci-lint for all possible config options.
+
+linters-settings:
+  maligned:
+    suggest-new: true
+  lll:
+    tab-width: 2
+
+linters:
+  enable-all: true
+  disable:
+    - gochecknoglobals
+    - gochecknoinits
+    - gomnd
+    - prealloc
+
+max-same-issues: 0
