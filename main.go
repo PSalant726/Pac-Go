@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -14,6 +15,11 @@ var (
 )
 
 func init() {
+	cfg.ConfigFile = flag.String("config-file", "config.json", "relative path to a custom configuration file")
+	cfg.MazeFile = flag.String("maze-file", "maze01.txt", "relative path to a custom maze layout file")
+	cfg.PlayerLives = flag.Int("player-lives", 3, "number of player lives")
+	flag.Parse()
+
 	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
 	cbTerm.Stdin = os.Stdin
 
@@ -39,13 +45,13 @@ func main() {
 	var err error
 
 	// load resources
-	maze, err = NewMaze("maze01.txt")
+	maze, err = NewMaze(*cfg.MazeFile)
 	if err != nil {
 		log.Printf("Error loading maze: %v\n", err)
 		return
 	}
 
-	if err = cfg.Load("config.json"); err != nil {
+	if err = cfg.Load(*cfg.ConfigFile); err != nil {
 		log.Println("failed to load configuration:", err)
 		return
 	}

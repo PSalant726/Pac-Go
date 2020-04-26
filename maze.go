@@ -38,7 +38,7 @@ func (m *Maze) Populate() *Maze {
 		for col, char := range line {
 			switch char {
 			case 'P':
-				m.Player = NewPlayer(row, col, 3)
+				m.Player = NewPlayer(row, col, *cfg.PlayerLives)
 			case 'G':
 				m.Ghosts = append(m.Ghosts, NewGhost(row, col))
 			case '.':

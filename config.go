@@ -6,6 +6,11 @@ import (
 )
 
 type Config struct {
+	ConfigFile  *string
+	MazeFile    *string
+	PlayerLives *int
+
+	UseEmoji bool   `json:"use_emoji"`
 	Player   string `json:"player"`
 	Ghost    string `json:"ghost"`
 	Wall     string `json:"wall"`
@@ -13,7 +18,6 @@ type Config struct {
 	Pill     string `json:"pill"`
 	Death    string `json:"death"`
 	Space    string `json:"space"`
-	UseEmoji bool   `json:"use_emoji"`
 }
 
 func (c *Config) Load(file string) error {
