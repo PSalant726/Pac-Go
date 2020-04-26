@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -15,10 +14,7 @@ var (
 )
 
 func init() {
-	cfg.ConfigFile = flag.String("config-file", "config.json", "relative path to a custom configuration file")
-	cfg.MazeFile = flag.String("maze-file", "maze01.txt", "relative path to a custom maze layout file")
-	cfg.PlayerLives = flag.Int("player-lives", 3, "number of player lives")
-	flag.Parse()
+	cfg.HandleCommandLineOptions()
 
 	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
 	cbTerm.Stdin = os.Stdin
@@ -47,11 +43,11 @@ func main() {
 	// load resources
 	maze, err = NewMaze(*cfg.MazeFile)
 	if err != nil {
-		log.Printf("Error loading maze: %v\n", err)
+		log.Println("failed to load maze:", err)
 		return
 	}
 
-	if err = cfg.Load(*cfg.ConfigFile); err != nil {
+	if err = cfg.LoadFile(*cfg.ConfigFile); err != nil {
 		log.Println("failed to load configuration:", err)
 		return
 	}
@@ -62,7 +58,7 @@ func main() {
 		for {
 			input, err := readInput()
 			if err != nil {
-				log.Println("Error reading input:", err)
+				log.Println("failed to read user input:", err)
 				ch <- "ESC"
 			}
 

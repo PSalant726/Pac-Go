@@ -2,14 +2,17 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"os"
 )
 
 type Config struct {
+	// Command line options
 	ConfigFile  *string
 	MazeFile    *string
 	PlayerLives *int
 
+	// Config file options
 	UseEmoji bool   `json:"use_emoji"`
 	Player   string `json:"player"`
 	Ghost    string `json:"ghost"`
@@ -20,7 +23,7 @@ type Config struct {
 	Space    string `json:"space"`
 }
 
-func (c *Config) Load(file string) error {
+func (c *Config) LoadFile(file string) error {
 	f, err := os.Open(file)
 	if err != nil {
 		return err
@@ -34,4 +37,12 @@ func (c *Config) Load(file string) error {
 	}
 
 	return nil
+}
+
+func (c *Config) HandleCommandLineOptions() {
+	c.ConfigFile = flag.String("config-file", "config.json", "relative path to a custom configuration file")
+	c.MazeFile = flag.String("maze-file", "maze01.txt", "relative path to a custom maze layout file")
+	c.PlayerLives = flag.Int("player-lives", 3, "number of player lives")
+
+	flag.Parse()
 }
