@@ -1,11 +1,23 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/danicat/simpleansi"
 )
+
+func getLivesAsEmoji() string {
+	buf := bytes.Buffer{}
+
+	for i := maze.Player.Lives; i > 0; i-- {
+		buf.WriteString(cfg.Player + " ")
+	}
+
+	return buf.String()
+}
 
 func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
 	newRow, newCol = oldRow, oldCol
@@ -113,17 +125,14 @@ func readInput() (string, error) {
 }
 
 func updatePlayerMessage(message string) {
-	moveCursor(len(maze.Layout)+1, 2)
-	fmt.Println("Score:", maze.Player.Score)
-
-	skewFactor := 2
+	livesRemaining := strconv.Itoa(maze.Player.Lives)
 	if cfg.UseEmoji {
-		skewFactor = 1
+		livesRemaining = getLivesAsEmoji()
 	}
 
-	moveCursor(len(maze.Layout)+1, len(maze.Layout[0])-5*skewFactor)
-	fmt.Println("Lives:", maze.Player.Lives)
+	moveCursor(len(maze.Layout)+1, 0)
+	fmt.Println("Score:", maze.Player.Score, "\nLives:", livesRemaining)
 
-	moveCursor(len(maze.Layout)+3, (len(maze.Layout[0])-len(message))/2)
+	moveCursor(len(maze.Layout)+4, 0)
 	fmt.Println(message)
 }
