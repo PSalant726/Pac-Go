@@ -30,7 +30,7 @@ func main() {
 	defer cleanup()
 
 	// load resources
-	maze, err = NewMaze(Blueprint{"maze01.txt"})
+	maze, err = NewMaze("maze01.txt")
 	if err != nil {
 		log.Printf("Error loading maze: %v\n", err)
 		return

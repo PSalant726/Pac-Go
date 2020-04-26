@@ -12,12 +12,8 @@ type Maze struct {
 	NumDots int
 }
 
-type Blueprint struct {
-	Filename string
-}
-
-func NewMaze(blueprint Blueprint) (*Maze, error) {
-	f, err := os.Open(blueprint.Filename)
+func NewMaze(filename string) (*Maze, error) {
+	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
