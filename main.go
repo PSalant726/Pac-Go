@@ -36,8 +36,6 @@ func main() {
 		return
 	}
 
-	maze.Populate()
-
 	if err = cfg.Load("config.json"); err != nil {
 		log.Println("failed to load configuration:", err)
 		return

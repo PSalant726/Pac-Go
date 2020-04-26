@@ -28,10 +28,12 @@ func NewMaze(filename string) (*Maze, error) {
 		layout = append(layout, line)
 	}
 
-	return &Maze{Layout: layout}, nil
+	maze := &Maze{Layout: layout}
+
+	return maze.Populate(), nil
 }
 
-func (m *Maze) Populate() {
+func (m *Maze) Populate() *Maze {
 	for row, line := range m.Layout {
 		for col, char := range line {
 			switch char {
@@ -44,6 +46,8 @@ func (m *Maze) Populate() {
 			}
 		}
 	}
+
+	return m
 }
 
 func (m *Maze) MovePlayer(direction string) {
