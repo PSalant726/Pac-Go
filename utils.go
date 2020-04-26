@@ -2,22 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
-	"os/exec"
 
 	"github.com/danicat/simpleansi"
 )
-
-func cleanup() {
-	cookedTerm := exec.Command("/bin/stty", "-cbreak", "echo")
-	cookedTerm.Stdin = os.Stdin
-
-	err := cookedTerm.Run()
-	if err != nil {
-		log.Fatalf("Unable to activate cooked mode in terminal: %v\n", err)
-	}
-}
 
 func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
 	newRow, newCol = oldRow, oldCol
@@ -93,8 +81,7 @@ func printScreen() {
 		fmt.Print(cfg.Ghost)
 	}
 
-	moveCursor(len(maze.Layout)+1, 0)
-	fmt.Println("  Score:", maze.Player.Score, "\t  Lives:", maze.Player.Lives)
+	updatePlayerMessage("")
 }
 
 func readInput() (string, error) {
@@ -123,4 +110,20 @@ func readInput() (string, error) {
 	}
 
 	return "", nil
+}
+
+func updatePlayerMessage(message string) {
+	moveCursor(len(maze.Layout)+1, 2)
+	fmt.Println("Score:", maze.Player.Score)
+
+	skewFactor := 2
+	if cfg.UseEmoji {
+		skewFactor = 1
+	}
+
+	moveCursor(len(maze.Layout)+1, len(maze.Layout[0])-5*skewFactor)
+	fmt.Println("Lives:", maze.Player.Lives)
+
+	moveCursor(len(maze.Layout)+3, (len(maze.Layout[0])-len(message))/2)
+	fmt.Println(message)
 }

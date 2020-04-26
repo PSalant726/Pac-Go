@@ -23,11 +23,20 @@ func init() {
 	}
 }
 
-func main() {
-	var err error
+func cleanup() {
+	cookedTerm := exec.Command("/bin/stty", "-cbreak", "echo")
+	cookedTerm.Stdin = os.Stdin
 
-	// initialize the game
+	err := cookedTerm.Run()
+	if err != nil {
+		log.Fatalf("Unable to activate cooked mode in terminal: %v\n", err)
+	}
+}
+
+func main() {
 	defer cleanup()
+
+	var err error
 
 	// load resources
 	maze, err = NewMaze("maze01.txt")
@@ -78,12 +87,11 @@ func main() {
 			moveCursor(maze.Player.Row, maze.Player.Col)
 			fmt.Print(cfg.Death)
 
-			moveCursor(len(maze.Layout)+2, 0)
-			fmt.Println("\n\t  Game Over")
+			updatePlayerMessage("Game Over")
 
 			break
 		} else if maze.NumDots == 0 {
-			fmt.Println("\nCongratulations! You win!")
+			updatePlayerMessage("Congratulations! You win!")
 			break
 		}
 
