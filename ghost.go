@@ -11,9 +11,9 @@ func NewGhost(row, col int) *Ghost {
 	return &Ghost{row, col}
 }
 
-func (g *Ghost) Move(maze []string) {
+func (g *Ghost) Move() {
 	dir := drawDirection()
-	g.Row, g.Col = makeMove(maze, g.Row, g.Col, dir)
+	g.Row, g.Col = makeMove(g.Row, g.Col, dir)
 }
 
 func drawDirection() string {

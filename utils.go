@@ -19,12 +19,7 @@ func cleanup() {
 	}
 }
 
-func clearScreen() {
-	fmt.Printf("\x1b[2J")
-	moveCursor(0, 0)
-}
-
-func makeMove(maze []string, oldRow, oldCol int, dir string) (newRow, newCol int) {
+func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
 	newRow, newCol = oldRow, oldCol
 
 	switch dir {
@@ -32,29 +27,29 @@ func makeMove(maze []string, oldRow, oldCol int, dir string) (newRow, newCol int
 		newRow--
 
 		if newRow < 0 {
-			newRow = len(maze) - 1
+			newRow = len(maze.Layout) - 1
 		}
 	case "DOWN":
 		newRow++
 
-		if newRow == len(maze)-1 {
+		if newRow == len(maze.Layout)-1 {
 			newRow = 0
 		}
 	case "RIGHT":
 		newCol++
 
-		if newCol == len(maze[0]) {
+		if newCol == len(maze.Layout[0]) {
 			newCol = 0
 		}
 	case "LEFT":
 		newCol--
 
 		if newCol < 0 {
-			newCol = len(maze[0]) - 1
+			newCol = len(maze.Layout[0]) - 1
 		}
 	}
 
-	if maze[newRow][newCol] == '#' {
+	if maze.Layout[newRow][newCol] == '#' {
 		newRow = oldRow
 		newCol = oldCol
 	}

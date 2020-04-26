@@ -47,7 +47,7 @@ func (m *Maze) Populate() {
 }
 
 func (m *Maze) MovePlayer(direction string) {
-	m.Player.Move(direction, m.Layout)
+	m.Player.Move(direction)
 
 	switch m.Layout[m.Player.Row][m.Player.Col] {
 	case '.':
@@ -60,7 +60,7 @@ func (m *Maze) MovePlayer(direction string) {
 
 func (m *Maze) MoveGhosts() {
 	for _, ghost := range m.Ghosts {
-		ghost.Move(m.Layout)
+		ghost.Move()
 
 		if m.Player.Row == ghost.Row && m.Player.Col == ghost.Col {
 			m.Player.Lives--
