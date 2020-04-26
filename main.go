@@ -6,11 +6,12 @@ import (
 	"os"
 	"os/exec"
 	"time"
-
-	"github.com/danicat/simpleansi"
 )
 
-var maze *Maze
+var (
+	maze *Maze
+	cfg  Config
+)
 
 func init() {
 	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
@@ -36,6 +37,11 @@ func main() {
 	}
 
 	maze.Populate()
+
+	if err = cfg.Load("config.json"); err != nil {
+		log.Println("failed to load configuration:", err)
+		return
+	}
 
 	// process input (async)
 	input := make(chan string)
@@ -71,7 +77,12 @@ func main() {
 
 		// check game over
 		if maze.Player.Lives <= 0 {
+			moveCursor(maze.Player.Row, maze.Player.Col)
+			fmt.Print(cfg.Death)
+
+			moveCursor(len(maze.Layout)+2, 0)
 			fmt.Println("\n\t  Game Over")
+
 			break
 		} else if maze.NumDots == 0 {
 			fmt.Println("\nCongratulations! You win!")
@@ -81,34 +92,4 @@ func main() {
 		// repeat
 		time.Sleep(200 * time.Millisecond)
 	}
-}
-
-func printScreen() {
-	clearScreen()
-
-	for _, line := range maze.Layout {
-		for _, char := range line {
-			switch char {
-			case '#':
-				fallthrough
-			case '.':
-				fmt.Printf("%c", char)
-			default:
-				fmt.Printf(" ")
-			}
-		}
-
-		fmt.Print("\n")
-	}
-
-	moveCursor(maze.Player.Row, maze.Player.Col)
-	fmt.Printf("P")
-
-	for _, ghost := range maze.Ghosts {
-		simpleansi.MoveCursor(ghost.Row, ghost.Col)
-		fmt.Print("G")
-	}
-
-	simpleansi.MoveCursor(len(maze.Layout)+1, 0)
-	fmt.Println("  Score:", maze.Player.Score, "\t  Lives:", maze.Player.Lives)
 }

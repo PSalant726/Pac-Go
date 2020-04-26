@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/danicat/simpleansi"
 )
 
 func cleanup() {
@@ -61,7 +63,41 @@ func makeMove(maze []string, oldRow, oldCol int, dir string) (newRow, newCol int
 }
 
 func moveCursor(row, col int) {
-	fmt.Printf("\x1b[%d;%df", row+1, col+1)
+	if cfg.UseEmoji {
+		simpleansi.MoveCursor(row, col*2)
+	} else {
+		simpleansi.MoveCursor(row, col)
+	}
+}
+
+func printScreen() {
+	simpleansi.ClearScreen()
+
+	for _, line := range maze.Layout {
+		for _, char := range line {
+			switch char {
+			case '#':
+				fmt.Print(simpleansi.WithBlueBackground(cfg.Wall))
+			case '.':
+				fmt.Printf(cfg.Dot)
+			default:
+				fmt.Printf(cfg.Space)
+			}
+		}
+
+		fmt.Println()
+	}
+
+	moveCursor(maze.Player.Row, maze.Player.Col)
+	fmt.Printf(cfg.Player)
+
+	for _, ghost := range maze.Ghosts {
+		moveCursor(ghost.Row, ghost.Col)
+		fmt.Print(cfg.Ghost)
+	}
+
+	moveCursor(len(maze.Layout)+1, 0)
+	fmt.Println("  Score:", maze.Player.Score, "\t  Lives:", maze.Player.Lives)
 }
 
 func readInput() (string, error) {
