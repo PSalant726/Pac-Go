@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/danicat/simpleansi"
 )
@@ -36,24 +37,40 @@ func main() {
 
 	maze.Populate()
 
+	// process input (async)
+	input := make(chan string)
+	go func(ch chan<- string) {
+		for {
+			input, err := readInput()
+			if err != nil {
+				log.Println("Error reading input:", err)
+				ch <- "ESC"
+			}
+
+			ch <- input
+		}
+	}(input)
+
 	// game loop
 	for {
 		// update screen
 		printScreen()
 
-		// process input
-		input, err := readInput()
-		if err != nil {
-			log.Printf("Error reading input: %v\n", err)
-			break
+		// process movement & collisions
+		select {
+		case inp := <-input:
+			if inp == "ESC" {
+				maze.Player.Lives = 0
+			}
+
+			maze.MovePlayer(inp)
+		default:
 		}
 
-		// process movement & collisions
-		maze.MovePlayer(input)
 		maze.MoveGhosts()
 
 		// check game over
-		if input == "ESC" || maze.Player.Lives <= 0 {
+		if maze.Player.Lives <= 0 {
 			fmt.Println("\n\t  Game Over")
 			break
 		} else if maze.NumDots == 0 {
@@ -62,6 +79,7 @@ func main() {
 		}
 
 		// repeat
+		time.Sleep(200 * time.Millisecond)
 	}
 }
 
