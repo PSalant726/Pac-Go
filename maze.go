@@ -73,7 +73,7 @@ func (m *Maze) MoveGhosts() {
 		ghost.Move()
 
 		if m.Player.Row == ghost.Row && m.Player.Col == ghost.Col {
-			m.Player.Lives--
+			m.Player.LoseLife()
 		}
 	}
 }

@@ -3,17 +3,14 @@ package main
 import "math/rand"
 
 type Ghost struct {
-	Row int
-	Col int
+	Row      int
+	Col      int
+	StartRow int
+	StartCol int
 }
 
 func NewGhost(row, col int) *Ghost {
-	return &Ghost{row, col}
-}
-
-func (g *Ghost) Move() {
-	dir := drawDirection()
-	g.Row, g.Col = makeMove(g.Row, g.Col, dir)
+	return &Ghost{row, col, row, col}
 }
 
 func drawDirection() string {
@@ -26,4 +23,9 @@ func drawDirection() string {
 	}
 
 	return move[dir]
+}
+
+func (g *Ghost) Move() {
+	dir := drawDirection()
+	g.Row, g.Col = makeMove(g.Row, g.Col, dir)
 }
