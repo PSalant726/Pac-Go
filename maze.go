@@ -56,7 +56,7 @@ func (m *Maze) MovePlayer(direction string) {
 	switch m.Layout[m.Player.Row][m.Player.Col] {
 	case '.':
 		m.NumDots--
-		score++
+		m.Player.Score++
 		// Remove dot from the maze
 		m.Layout[m.Player.Row] = m.Layout[m.Player.Row][0:m.Player.Col] + " " + m.Layout[m.Player.Row][m.Player.Col+1:]
 	}

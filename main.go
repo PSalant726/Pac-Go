@@ -9,10 +9,7 @@ import (
 	"github.com/danicat/simpleansi"
 )
 
-var (
-	maze  *Maze
-	score int
-)
+var maze *Maze
 
 func init() {
 	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
@@ -95,5 +92,5 @@ func printScreen() {
 	}
 
 	simpleansi.MoveCursor(len(maze.Layout)+1, 0)
-	fmt.Println("  Score:", score, "\t  Lives:", maze.Player.Lives)
+	fmt.Println("  Score:", maze.Player.Score, "\t  Lives:", maze.Player.Lives)
 }
