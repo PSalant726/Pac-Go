@@ -75,6 +75,8 @@ func printScreen() {
 				fmt.Print(simpleansi.WithBlueBackground(cfg.Wall))
 			case '.':
 				fmt.Printf(cfg.Dot)
+			case 'X':
+				fmt.Printf(cfg.Pill)
 			default:
 				fmt.Printf(cfg.Space)
 			}
