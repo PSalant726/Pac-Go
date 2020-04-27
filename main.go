@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -85,15 +84,7 @@ func main() {
 		maze.MoveGhosts()
 
 		// check game over
-		if maze.Player.Lives <= 0 {
-			moveCursor(maze.Player.Row, maze.Player.Col)
-			fmt.Print(cfg.Death)
-
-			updatePlayerMessage("Game Over")
-
-			break
-		} else if maze.NumDots == 0 {
-			updatePlayerMessage("Congratulations! You win!")
+		if isGameOver() {
 			break
 		}
 

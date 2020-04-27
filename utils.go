@@ -19,6 +19,22 @@ func getLivesAsEmoji() string {
 	return buf.String()
 }
 
+func isGameOver() bool {
+	if maze.Player.Lives <= 0 {
+		moveCursor(maze.Player.Row, maze.Player.Col)
+		fmt.Print(cfg.Death)
+
+		updatePlayerMessage("Game Over")
+
+		return true
+	} else if maze.NumDots == 0 {
+		updatePlayerMessage("Congratulations! You win!")
+		return true
+	}
+
+	return false
+}
+
 func makeMove(oldRow, oldCol int, dir string) (newRow, newCol int) {
 	newRow, newCol = oldRow, oldCol
 
