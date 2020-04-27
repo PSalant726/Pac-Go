@@ -40,8 +40,8 @@ func (c *Config) LoadFile(file string) error {
 }
 
 func (c *Config) HandleCommandLineOptions() {
-	c.ConfigFile = flag.String("config-file", "config.json", "relative path to a custom configuration file")
-	c.MazeFile = flag.String("maze-file", "maze01.txt", "relative path to a custom maze layout file")
+	c.ConfigFile = flag.String("config-file", "./lib/config.json", "relative path to a custom configuration file")
+	c.MazeFile = flag.String("maze-file", "./lib/maze01.txt", "relative path to a custom maze layout file")
 	c.PlayerLives = flag.Int("player-lives", 3, "number of player lives")
 
 	flag.Parse()
