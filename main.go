@@ -24,16 +24,6 @@ func init() {
 	}
 }
 
-func cleanup() {
-	cookedTerm := exec.Command("/bin/stty", "-cbreak", "echo")
-	cookedTerm.Stdin = os.Stdin
-
-	err := cookedTerm.Run()
-	if err != nil {
-		log.Fatalf("Unable to activate cooked mode in terminal: %v\n", err)
-	}
-}
-
 func main() {
 	defer cleanup()
 
@@ -51,6 +41,20 @@ func main() {
 		return
 	}
 
+	playGame()
+}
+
+func cleanup() {
+	cookedTerm := exec.Command("/bin/stty", "-cbreak", "echo")
+	cookedTerm.Stdin = os.Stdin
+
+	err := cookedTerm.Run()
+	if err != nil {
+		log.Fatalf("Unable to activate cooked mode in terminal: %v\n", err)
+	}
+}
+
+func playGame() {
 	// process input (async)
 	input := make(chan string)
 	go func(ch chan<- string) {
@@ -65,9 +69,7 @@ func main() {
 		}
 	}(input)
 
-	// game loop
 	for {
-		// update screen
 		printScreen()
 
 		// process movement & collisions
@@ -83,12 +85,10 @@ func main() {
 
 		maze.MoveGhosts()
 
-		// check game over
 		if isGameOver() {
 			break
 		}
 
-		// repeat
 		time.Sleep(200 * time.Millisecond)
 	}
 }
