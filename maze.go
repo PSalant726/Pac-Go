@@ -3,13 +3,19 @@ package main
 import (
 	"bufio"
 	"os"
+	"sync"
+	"time"
 )
 
 type Maze struct {
-	Layout  []string
-	Player  *Player
-	Ghosts  []*Ghost
-	NumDots int
+	Layout        []string
+	Player        *Player
+	Ghosts        []*Ghost
+	GhostStatusMx sync.RWMutex
+	NumDots       int
+	PillTimer     *time.Timer
+	PillTimerEnd  time.Time
+	pillMx        sync.Mutex
 }
 
 func NewMaze(filename string) (*Maze, error) {
@@ -63,8 +69,10 @@ func (m *Maze) MovePlayer(direction string) {
 		m.Player.Score++
 		removeDot(m.Player.Row, m.Player.Col)
 	case 'X':
-		m.Player.Score += 10
+		m.Player.Score += *cfg.PillScore
 		removeDot(m.Player.Row, m.Player.Col)
+
+		go m.processPill()
 	}
 }
 
@@ -73,7 +81,57 @@ func (m *Maze) MoveGhosts() {
 		ghost.Move()
 
 		if m.Player.Row == ghost.Row && m.Player.Col == ghost.Col {
-			m.Player.LoseLife()
+			m.GhostStatusMx.Lock()
+			if ghost.IsThreat {
+				m.Player.LoseLife()
+			} else {
+				m.Player.Score += *cfg.GhostDefeatScore
+				ghost.Defeat()
+			}
+			m.GhostStatusMx.Unlock()
 		}
 	}
+}
+
+func (m *Maze) swapGhosts(toStatus string) {
+	m.GhostStatusMx.Lock()
+	defer m.GhostStatusMx.Unlock()
+
+	for _, ghost := range m.Ghosts {
+		switch toStatus {
+		case "threat":
+			ghost.IsThreat = true
+		default:
+			ghost.IsThreat = false
+		}
+	}
+}
+
+func (m *Maze) processPill() {
+	m.pillMx.Lock()
+	defer m.pillMx.Unlock()
+
+	m.swapGhosts("safe")
+	m.setPillTimer()
+
+	m.pillMx.Unlock()
+	<-m.PillTimer.C
+	m.pillMx.Lock()
+
+	m.PillTimer.Stop()
+	m.swapGhosts("threat")
+}
+
+func (m *Maze) setPillTimer() {
+	pillTime := *cfg.PillDuration * time.Second
+
+	if m.PillTimer != nil {
+		m.PillTimer.Stop()
+
+		pillTime += time.Until(maze.PillTimerEnd)
+		maze.PillTimerEnd = time.Now()
+	}
+
+	m.PillTimer = time.NewTimer(pillTime)
+	m.PillTimerEnd = time.Now().Add(pillTime)
 }

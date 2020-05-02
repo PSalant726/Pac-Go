@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/danicat/simpleansi"
 )
@@ -106,7 +107,14 @@ func printScreen() {
 
 	for _, ghost := range maze.Ghosts {
 		moveCursor(ghost.Row, ghost.Col)
-		fmt.Print(cfg.Ghost)
+
+		maze.GhostStatusMx.RLock()
+		if ghost.IsThreat {
+			fmt.Print(cfg.Ghost)
+		} else {
+			fmt.Print(cfg.GhostBlue)
+		}
+		maze.GhostStatusMx.RUnlock()
 	}
 
 	updatePlayerMessage("")
@@ -146,8 +154,13 @@ func updatePlayerMessage(message string) {
 		livesRemaining = getLivesAsEmoji()
 	}
 
+	var pillTimeRemaining string
+	if pillTime := time.Until(maze.PillTimerEnd); pillTime > 0 {
+		pillTimeRemaining = fmt.Sprintf("\nPill Time Remaining: %v", pillTime.Round(time.Second))
+	}
+
 	moveCursor(len(maze.Layout)+1, 0)
-	fmt.Println("Score:", maze.Player.Score, "\nLives:", livesRemaining)
+	fmt.Println("Score:", maze.Player.Score, "\nLives:", livesRemaining, pillTimeRemaining)
 
 	moveCursor(len(maze.Layout)+4, 0)
 	fmt.Println(message)

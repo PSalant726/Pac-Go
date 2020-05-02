@@ -7,10 +7,11 @@ type Ghost struct {
 	Col      int
 	StartRow int
 	StartCol int
+	IsThreat bool
 }
 
 func NewGhost(row, col int) *Ghost {
-	return &Ghost{row, col, row, col}
+	return &Ghost{row, col, row, col, true}
 }
 
 func drawDirection() string {
@@ -28,4 +29,9 @@ func drawDirection() string {
 func (g *Ghost) Move() {
 	dir := drawDirection()
 	g.Row, g.Col = makeMove(g.Row, g.Col, dir)
+}
+
+func (g *Ghost) Defeat() {
+	g.Row, g.Col = g.StartRow, g.StartCol
+	g.IsThreat = true
 }
