@@ -15,6 +15,7 @@ type Config struct {
 	PillDuration     *time.Duration
 	PillScore        *int
 	GhostDefeatScore *int
+	Framerate        *time.Duration
 
 	// Config file options
 	UseEmoji  bool   `json:"use_emoji"`
@@ -48,9 +49,10 @@ func (c *Config) HandleCommandLineOptions() {
 	c.ConfigFile = flag.String("config-file", "./lib/config.json", "relative path to a custom configuration file")
 	c.MazeFile = flag.String("maze-file", "./lib/maze01.txt", "relative path to a custom maze layout file")
 	c.PlayerLives = flag.Int("player-lives", 3, "number of player lives")
-	c.PillDuration = flag.Duration("pill-duration", 20*time.Second, "time for which a pill should take effect")
 	c.PillScore = flag.Int("pill-score", 10, "points scored when swallowing a pill")
+	c.PillDuration = flag.Duration("pill-duration", 20*time.Second, "time for which a pill should take effect")
 	c.GhostDefeatScore = flag.Int("ghost-defeat-score", 15, "points scored when defeating a ghost")
+	c.Framerate = flag.Duration("framerate", 200*time.Millisecond, "speed at which to render the game")
 
 	flag.Parse()
 }

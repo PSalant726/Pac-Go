@@ -89,6 +89,6 @@ func playGame() {
 			break
 		}
 
-		time.Sleep(200 * time.Millisecond)
+		time.Sleep(*cfg.Framerate)
 	}
 }
