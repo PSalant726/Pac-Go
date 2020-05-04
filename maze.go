@@ -123,7 +123,7 @@ func (m *Maze) processPill() {
 }
 
 func (m *Maze) setPillTimer() {
-	pillTime := *cfg.PillDuration * time.Second
+	pillTime := *cfg.PillDuration
 
 	if m.PillTimer != nil {
 		m.PillTimer.Stop()
