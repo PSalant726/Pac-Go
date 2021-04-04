@@ -28,7 +28,6 @@ func NewMaze(filename string) (*Maze, error) {
 	var layout []string
 
 	scanner := bufio.NewScanner(f)
-
 	for scanner.Scan() {
 		line := scanner.Text()
 		layout = append(layout, line)

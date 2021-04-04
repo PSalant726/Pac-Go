@@ -120,15 +120,15 @@ func printScreen() {
 func readInput() (string, error) {
 	buffer := make([]byte, 100)
 
-	cnt, err := os.Stdin.Read(buffer)
+	count, err := os.Stdin.Read(buffer)
 	if err != nil {
 		return "", err
 	}
 
 	if buffer[0] == 0x1b {
-		if cnt == 1 {
+		if count == 1 {
 			return "ESC", nil
-		} else if cnt >= 3 && buffer[1] == '[' {
+		} else if count >= 3 && buffer[1] == '[' {
 			switch buffer[2] {
 			case 'A':
 				return "UP", nil

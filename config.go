@@ -38,7 +38,6 @@ func (c *Config) LoadFile(file string) error {
 	defer f.Close()
 
 	decoder := json.NewDecoder(f)
-
 	if err = decoder.Decode(&c); err != nil {
 		return err
 	}

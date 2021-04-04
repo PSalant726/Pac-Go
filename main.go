@@ -24,13 +24,10 @@ func init() {
 }
 
 func main() {
-	defer cleanup()
-
 	var err error
 
 	// load resources
-	maze, err = NewMaze(cfg.MazeFile)
-	if err != nil {
+	if maze, err = NewMaze(cfg.MazeFile); err != nil {
 		log.Println("failed to load maze:", err)
 		return
 	}
@@ -41,6 +38,7 @@ func main() {
 	}
 
 	playGame()
+	cleanup()
 }
 
 func cleanup() {
