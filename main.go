@@ -83,7 +83,10 @@ func playGame() {
 
 		maze.MoveGhosts()
 
-		if isGameOver() {
+		if msg, ok := isGameOver(); ok {
+			printScreen()
+			updatePlayerMessage(msg)
+
 			break
 		}
 
