@@ -4,14 +4,17 @@ linters-settings:
   maligned:
     suggest-new: true
   lll:
+    line-length: 125
     tab-width: 2
 
 linters:
   enable-all: true
   disable:
+    - forbidigo
     - gochecknoglobals
     - gochecknoinits
     - gomnd
+    - nlreturn
     - prealloc
 
 max-same-issues: 0

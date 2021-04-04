@@ -18,8 +18,7 @@ func init() {
 	cbTerm := exec.Command("/bin/stty", "cbreak", "-echo")
 	cbTerm.Stdin = os.Stdin
 
-	err := cbTerm.Run()
-	if err != nil {
+	if err := cbTerm.Run(); err != nil {
 		log.Fatalf("Unable to activate cbreak mode in terminal: %v\n", err)
 	}
 }
@@ -48,8 +47,7 @@ func cleanup() {
 	cookedTerm := exec.Command("/bin/stty", "-cbreak", "echo")
 	cookedTerm.Stdin = os.Stdin
 
-	err := cookedTerm.Run()
-	if err != nil {
+	if err := cookedTerm.Run(); err != nil {
 		log.Fatalf("Unable to activate cooked mode in terminal: %v\n", err)
 	}
 }
