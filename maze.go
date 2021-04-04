@@ -44,7 +44,7 @@ func (m *Maze) Populate() *Maze {
 		for col, char := range line {
 			switch char {
 			case 'P':
-				m.Player = NewPlayer(row, col, *cfg.PlayerLives)
+				m.Player = NewPlayer(row, col, cfg.PlayerLives)
 			case 'G':
 				m.Ghosts = append(m.Ghosts, NewGhost(row, col))
 			case '.':
@@ -69,7 +69,7 @@ func (m *Maze) MovePlayer(direction string) {
 		m.Player.Score++
 		removeDot(m.Player.Row, m.Player.Col)
 	case 'X':
-		m.Player.Score += *cfg.PillScore
+		m.Player.Score += cfg.PillScore
 		removeDot(m.Player.Row, m.Player.Col)
 
 		go m.processPill()
@@ -85,7 +85,7 @@ func (m *Maze) MoveGhosts() {
 			if ghost.IsThreat {
 				m.Player.LoseLife()
 			} else {
-				m.Player.Score += *cfg.GhostDefeatScore
+				m.Player.Score += cfg.GhostDefeatScore
 				ghost.Defeat()
 			}
 			m.GhostStatusMx.Unlock()
@@ -123,7 +123,7 @@ func (m *Maze) processPill() {
 }
 
 func (m *Maze) setPillTimer() {
-	pillTime := *cfg.PillDuration
+	pillTime := cfg.PillDuration
 
 	if m.PillTimer != nil {
 		m.PillTimer.Stop()

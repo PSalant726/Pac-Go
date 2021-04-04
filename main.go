@@ -29,13 +29,13 @@ func main() {
 	var err error
 
 	// load resources
-	maze, err = NewMaze(*cfg.MazeFile)
+	maze, err = NewMaze(cfg.MazeFile)
 	if err != nil {
 		log.Println("failed to load maze:", err)
 		return
 	}
 
-	if err = cfg.LoadFile(*cfg.ConfigFile); err != nil {
+	if err = cfg.LoadFile(cfg.ConfigFile); err != nil {
 		log.Println("failed to load configuration:", err)
 		return
 	}
@@ -87,6 +87,6 @@ func playGame() {
 			break
 		}
 
-		time.Sleep(*cfg.Framerate)
+		time.Sleep(cfg.Framerate)
 	}
 }
